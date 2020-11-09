@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenjm.sportplay.Mapper.UserMapping">
+    <select id="getUserByExample" parameterType="User" resultType="User">
+        select *
+        from easyuser
+        <where>
+            <if test="#{username} != null">
+                and username = #{username}
+            </if>
+            <if test="#{password} != null">
+                and password = #{password}
+            </if>
+        </where>
+    </select>
+
+    <select id="getUserByExampleWithPage" parameterType="PageInfo" resultType="User">
+        select *
+        from easyuser
+        <where>
+            <if test="bean.username != null &amp;&amp; bean.username != '' ">
+                and username like CONCAT(CONCAT('%',#{bean.username},'%'))
+            </if>
+        </where>
+        limit #{pageStart},#{pageSize}
+    </select>
+
+    <select id="getCountByExample" parameterType="PageInfo" resultType="java.lang.Integer">
+        select count(*)
+        from easyuser
+        <where>
+            <if test="bean.username != null &amp;&amp; bean.username != '' ">
+                and username like CONCAT(CONCAT('%',#{bean.username},'%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="getUserById" parameterType="java.lang.Integer" resultType="User">
+        select * from easyuser
+        where id = #{id}
+    </select>
+
+    <update id="updateState">
+        update easyuser
+        set state = #{state}
+        WHERE id = #{id}
+    </update>
+
+    <update id="editUser">
+        UPDATE easyuser SET username = #{username} , password = #{password} ,
+        email = #{email} WHERE id = #{id}
+    </update>
+
+    <insert id="addUser" parameterType="User">
+        insert into easyuser(username,password,email,role,state)
+        value(#{username},#{password},#{email},#{role},#{state})
+    </insert>
+
+    <delete id="deleteUser">
+        DELETE FROM easyuser WHERE id = #{id}
+    </delete>
+</mapper>
